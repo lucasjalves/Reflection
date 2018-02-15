@@ -14,11 +14,8 @@ public abstract class AbstractViewHelper implements  ViewHelper {
     {
         Class<?> classe = null;
         Method metodoClasse;
-        Method metodoConversao = null;
-
         String nomeMetodoClasse;
-        String nomeMetodoClasseConversao;
-        String atributoRequisicao = null;
+        Object atributoRequisicao = null;
 
         try {
             classe  = Class.forName(entidade.getClass().getName());
@@ -31,7 +28,7 @@ public abstract class AbstractViewHelper implements  ViewHelper {
                 nomeMetodoClasse = StringGenerator.gerarNomeMetodoGetSet(atributo, "set"); // gera o nome do metodo da classe de entidade
 
                 metodoClasse = classe.getDeclaredMethod(nomeMetodoClasse, atributo.getType());
-                atributoRequisicao = (String) MethodSelectorUtil.generateMethod(atributo, request.getParameter("txt" + atributo.getName()));
+                atributoRequisicao = MethodSelectorUtil.generateMethod(atributo, request.getParameter("txt" + atributo.getName()));
 
                 metodoClasse.invoke(entidade, atributoRequisicao); //chama o metodo set da classe e atribui o retorno do getParameter
             } catch (NoSuchMethodException | SecurityException | IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {

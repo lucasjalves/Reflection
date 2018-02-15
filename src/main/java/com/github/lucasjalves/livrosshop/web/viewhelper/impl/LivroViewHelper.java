@@ -18,8 +18,8 @@ public class LivroViewHelper extends AbstractViewHelper {
 
 	@Override
 	public AbstractEntidade getEntidades(HttpServletRequest request) {
-		Field[] fields = Livro.class.getDeclaredFields();
-		Livro l = (Livro) getParameters(fields, new Livro(), request);
+		Field[] atributos = Livro.class.getDeclaredFields();
+		Livro l = (Livro) getParameters(atributos, new Livro(), request);
 		return l;
 	}
 

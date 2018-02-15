@@ -5,6 +5,7 @@ import com.github.lucasjalves.livrosshop.core.facade.Facade;
 import com.github.lucasjalves.livrosshop.core.repository.AbstractRepository;
 import com.github.lucasjalves.livrosshop.domain.entities.AbstractEntidade;
 import org.reflections.Reflections;
+import java.lang.reflect.*;
 
 
 import java.util.ArrayList;
@@ -12,26 +13,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FacadeImpl implements Facade {
-    int i = 0;
+public class FacadeImpl implements Facade<AbstractEntidade> {
+
+
     private Map<String, AbstractRepository> repositories = new HashMap<>();
 
-    private List<Class<? extends AbstractEntidade>> classesEntidades = new ArrayList<>(new Reflections().getSubTypesOf(AbstractEntidade.class));
-    private List<Class<? extends AbstractRepository>> classesRepositorios = new ArrayList<>(new Reflections().getSubTypesOf(AbstractRepository.class));
+    private List<Class<? extends AbstractRepository>> classesRepositorios =
+            new ArrayList<>(new Reflections().getSubTypesOf(AbstractRepository.class));
 
+    
     public FacadeImpl()
     {
-        classesEntidades.forEach(n -> {
-            try {
-                repositories.put(n.getName(), classesRepositorios.get(i).newInstance());
-                i++;
-            } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
+        classesRepositorios.forEach( n -> {
+            System.out.println( (Class<?>)((ParameterizedType)
+            n.getClass().
+                    getGenericSuperclass()).getActualTypeArguments()[0]);
         });
+
+
     }
 
 
+    public static void main(String[] args) {
+        new FacadeImpl();
+    }
     @Override
     public Resultado atualizar(AbstractEntidade entidade) {
 
@@ -44,17 +49,13 @@ public class FacadeImpl implements Facade {
     }
     @Override
     public Resultado salvar(AbstractEntidade entidade) {
-        System.out.println("Operação salvar... facade");
-        System.out.println(entidade.getClass().getName());
         repositories.get(entidade.getClass().getName()).salvar(entidade);
 
         return null;
     }
 
     @Override
-    public Resultado consultar(AbstractEntidade entidade) {
-
+    public Resultado consultar(AbstractEntidade abstractEntidade) {
         return null;
     }
-
 }

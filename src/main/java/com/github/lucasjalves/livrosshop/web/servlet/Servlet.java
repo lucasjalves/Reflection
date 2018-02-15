@@ -47,7 +47,7 @@ public class Servlet extends HttpServlet {
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response)
     {
-        System.out.println("processando requisição...");
+
         String uri = request.getRequestURI();
         String operacao = request.getParameter("operacao");
 
@@ -56,7 +56,6 @@ public class Servlet extends HttpServlet {
 
         AbstractEntidade entidade =  vh.getEntidades(request);
 
-        System.out.println("indo para..." + commands.get(operacao).getClass().getSimpleName());
         Command command = commands.get(operacao);
         Resultado resultado = command.executar(entidade);
 
