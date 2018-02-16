@@ -10,11 +10,11 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
-public abstract class AbstractRepository implements Repository {
+public abstract class AbstractRepository<AbstractEntidade>  implements Repository {
     protected Connection conn;
     public void openConnection()
     {
-        conn = ConexaoUtil.addConnection("jdbc:mysql://localhost/livrosdb?useSSL=false", "root", "");
+        conn = ConexaoUtil.addConnection("jdbc:mysql://localhost/livrosdb?useSSL=false", "root", "root");
     }
 
 

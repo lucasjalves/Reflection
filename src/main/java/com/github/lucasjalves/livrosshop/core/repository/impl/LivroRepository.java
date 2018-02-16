@@ -9,7 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
-public class LivroRepository extends AbstractRepository {
+public class LivroRepository extends AbstractRepository<Livro> {
     @Override
     public List<AbstractEntidade> buscar(AbstractEntidade entidade) {
         return null;
@@ -36,7 +36,7 @@ public class LivroRepository extends AbstractRepository {
 
             pst = conn.prepareStatement(query);
 
-            pst = prepareStatement(entidade, pst, fields);
+            pst = prepareStatement((Livro) entidade, pst, fields);
             pst.executeUpdate();
             conn.commit();
             System.out.println("commitando no banco...");
