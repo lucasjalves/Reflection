@@ -10,7 +10,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class LivroRepository extends AbstractRepository<Livro> {
-
     @Override
     public List<AbstractEntidade> buscar(AbstractEntidade entidade) {
         return null;
@@ -26,22 +25,21 @@ public class LivroRepository extends AbstractRepository<Livro> {
 
     }
 
-
     @Override
     public void salvar(AbstractEntidade entidade) {
         openConnection();
         PreparedStatement pst = null;
         try {
             Field[] fields = Livro.class.getDeclaredFields();
-            conn.setAutoCommit(true);
+            conn.setAutoCommit(false);
             String query = buildQueryInsert(fields, "livros");
 
             pst = conn.prepareStatement(query);
 
-            pst = addValues(entidade, pst, fields);
+            pst = prepareStatement((Livro) entidade, pst, fields);
             pst.executeUpdate();
-
-            System.out.println("salvando no banco...");
+            conn.commit();
+            System.out.println("commitando no banco...");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -50,6 +48,5 @@ public class LivroRepository extends AbstractRepository<Livro> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 }

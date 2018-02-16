@@ -11,28 +11,24 @@ public final class MethodSelectorUtil {
     {
         Object o = null;
         Class<?> classe = null;
+        String nomeClasse = null;
         if(atributo.getType().isPrimitive()) {
             String nomeMetodo = atributo.getType().getSimpleName().substring(0, 1).toUpperCase() + atributo.getType().getSimpleName().substring(1);
-            String nomeClasse;
-            if(atributo.getType().getCanonicalName().equals("int"))
+            if(atributo.getType().getSimpleName().equals("int"))
             {
-                nomeClasse = "java.lang.Integer";
+                 nomeClasse = "java.lang.Integer";
             }
             else
             {
                 nomeClasse = "java.lang." + nomeMetodo;
             }
-            System.out.println(nomeClasse);
-            System.out.println(nomeMetodo);
-            nomeMetodo = "valueOf";
             try {
                 classe = Class.forName(nomeClasse);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
             try {
-                Method metodoConversao = classe.getDeclaredMethod(nomeMetodo, String.class);
-
+                Method metodoConversao = classe.getDeclaredMethod("valueOf", String.class);
                 o = metodoConversao.invoke(classe, atributoRequisicao);
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();

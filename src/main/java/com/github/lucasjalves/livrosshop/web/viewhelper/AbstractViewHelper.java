@@ -14,6 +14,7 @@ public abstract class AbstractViewHelper implements  ViewHelper {
     {
         Class<?> classe = null;
         Method metodoClasse;
+
         String nomeMetodoClasse;
         Object atributoRequisicao = null;
 
