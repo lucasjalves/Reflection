@@ -3,60 +3,74 @@ package com.github.lucasjalves.livrosshop.core.facade.impl;
 import com.github.lucasjalves.livrosshop.core.aplicacao.Resultado;
 import com.github.lucasjalves.livrosshop.core.facade.Facade;
 import com.github.lucasjalves.livrosshop.core.repository.AbstractRepository;
+import com.github.lucasjalves.livrosshop.core.util.ClassCreatorUtil;
+import com.github.lucasjalves.livrosshop.core.util.DatabaseUtil;
 import com.github.lucasjalves.livrosshop.domain.entities.AbstractEntidade;
+
 import org.reflections.Reflections;
 
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.sql.Connection;
+import java.util.*;
 
-public class FacadeImpl implements Facade {
+public final class FacadeImpl implements Facade {
 
     private Map<String, AbstractRepository> repositories = new HashMap<>();
 
 
-    private List<Class<? extends AbstractRepository>> classesRepositorios = new ArrayList<>(new Reflections().getSubTypesOf(AbstractRepository.class));
+    private Set<Class<? extends AbstractRepository>> classesRepositorios =
+            new Reflections().getSubTypesOf(AbstractRepository.class);
 
-    public FacadeImpl()
+    private final static FacadeImpl INSTANCE = new FacadeImpl();
+
+    private <T> T noCast(Object object){
+        return (T)object;
+    }
+
+    private FacadeImpl()
     {
-        classesRepositorios.forEach(n -> {
-            ParameterizedType parameterizedType = (ParameterizedType) n.getGenericSuperclass();
+        classesRepositorios.forEach(repository -> {
+            ParameterizedType parameterizedType = noCast(repository.getGenericSuperclass());
             Type actualType = parameterizedType.getActualTypeArguments()[0];
             try {
-                repositories.put(actualType.getTypeName(), n.newInstance());
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
+                repositories.put(actualType.getTypeName(), repository.newInstance());
+            } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }
         });
+
     }
 
-    @Override
-    public Resultado atualizar(AbstractEntidade entidade) {
+    public static FacadeImpl getInstance()
+    {
+        return INSTANCE;
+    }
 
-        return null;
+    public static void main(String[] args) {
+        Connection connection = DatabaseUtil.addConnection("jdbc:mysql://localhost/livrosdb?useSSL=false", "root", "");
+        ClassCreatorUtil.createClasses(DatabaseUtil.scanTables(connection));
     }
     @Override
-    public Resultado deletar(AbstractEntidade entidade) {
-
-        return null;
-    }
-    @Override
-    public Resultado salvar(AbstractEntidade entidade) {
-        repositories.get(entidade.getClass().getName()).salvar(entidade);
-
+    public Resultado consultar(Object o) {
         return null;
     }
 
     @Override
-    public Resultado consultar(AbstractEntidade entidade) {
-
+    public Resultado atualizar(Object o) {
         return null;
     }
 
+    @Override
+    public Resultado deletar(Object o) {
+        return null;
+    }
+
+    @Override
+    public Resultado salvar(Object object) {
+        AbstractEntidade entidade = noCast(object);
+        repositories.get(object.getClass().getName()).salvar(entidade);
+        return null;
+    }
 }

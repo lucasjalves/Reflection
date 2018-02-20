@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Resultado {
-    private List<AbstractEntidade> entidades = new ArrayList<>();
+public class Resultado<T> {
+    private List<T> entidades = new ArrayList<>();
     private String msg;
     public String getMsg()
     {
@@ -17,11 +17,11 @@ public class Resultado {
     {
         this.msg = msg;
     }
-    public List<AbstractEntidade> getEntidades()
+    public List<T> getEntidades()
     {
         return entidades;
     }
-    public void setEntidades(List<AbstractEntidade> entidades)
+    public void setEntidades(List<T> entidades)
     {
         this.entidades = entidades;
     }

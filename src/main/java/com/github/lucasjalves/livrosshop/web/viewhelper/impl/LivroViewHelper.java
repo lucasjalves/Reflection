@@ -2,25 +2,31 @@ package com.github.lucasjalves.livrosshop.web.viewhelper.impl;
 
 import com.github.lucasjalves.livrosshop.core.aplicacao.Resultado;
 import com.github.lucasjalves.livrosshop.domain.entities.AbstractEntidade;
+
 import com.github.lucasjalves.livrosshop.domain.entities.Livro;
 import com.github.lucasjalves.livrosshop.web.viewhelper.AbstractViewHelper;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static java.util.Arrays.*;
+
 
 public class LivroViewHelper extends AbstractViewHelper {
 
 	@Override
 	public AbstractEntidade getEntidades(HttpServletRequest request) {
-		Field[] atributos = Livro.class.getDeclaredFields();
-		Livro l = (Livro) getParameters(atributos, new Livro(), request);
-		return l;
+
+		List<Field> atributos = asList(Livro.class.getDeclaredFields());
+		return getParameters(atributos, new Livro(), request);
+
 	}
 
 	@Override

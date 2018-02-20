@@ -23,6 +23,7 @@
     </build>
 
     <dependencies>
+        <!-- compiled dependencies -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -36,11 +37,19 @@
         </dependency>
 
         <dependency>
+            <groupId>net.vidageek</groupId>
+            <artifactId>mirror</artifactId>
+            <version>1.6.1</version>
+        </dependency>
+
+
+        <!-- provided dependencies-->
+
+        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>3.1.0</version>
             <scope>provided</scope>
-
         </dependency>
 
     </dependencies>

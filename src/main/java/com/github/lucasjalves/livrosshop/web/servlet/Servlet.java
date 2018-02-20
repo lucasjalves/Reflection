@@ -12,6 +12,7 @@ import com.github.lucasjalves.livrosshop.web.viewhelper.impl.LivroViewHelper;
 
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +25,7 @@ public class Servlet extends HttpServlet {
 
     private static Map<String, Command> commands;
     private static Map<String, ViewHelper> vhs;
-    public Servlet()
+    static
     {
         commands = new HashMap<>();
         commands.put("SALVAR", new SalvarCommand());
@@ -35,6 +36,7 @@ public class Servlet extends HttpServlet {
         vhs = new HashMap<>();
         vhs.put("/SalvarLivro", new LivroViewHelper());
     }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processRequest(request, response);
@@ -51,14 +53,12 @@ public class Servlet extends HttpServlet {
         String uri = request.getRequestURI();
         String operacao = request.getParameter("operacao");
 
-
         ViewHelper vh = vhs.get(uri);
 
         AbstractEntidade entidade =  vh.getEntidades(request);
 
         Command command = commands.get(operacao);
         Resultado resultado = command.executar(entidade);
-
 
         vh.setView(resultado, request, response);
     }

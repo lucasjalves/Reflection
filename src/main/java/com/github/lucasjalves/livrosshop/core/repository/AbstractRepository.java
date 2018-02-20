@@ -1,71 +1,41 @@
 package com.github.lucasjalves.livrosshop.core.repository;
 
-import com.github.lucasjalves.livrosshop.core.util.ConexaoUtil;
-import com.github.lucasjalves.livrosshop.core.util.StringGenerator;
-import com.github.lucasjalves.livrosshop.domain.entities.AbstractEntidade;
+import com.github.lucasjalves.livrosshop.core.util.DatabaseUtil;
+import net.vidageek.mirror.dsl.Mirror;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.List;
 
-public abstract class AbstractRepository implements Repository {
+import static com.github.lucasjalves.livrosshop.core.util.DatabaseUtil.*;
+
+public abstract class AbstractRepository<AbstractEntidade> implements Repository {
     protected Connection conn;
     public void openConnection()
     {
-        conn = ConexaoUtil.addConnection("jdbc:mysql://localhost/livrosdb?useSSL=false", "root", "");
+        conn = addConnection("jdbc:mysql://localhost/livrosdb?useSSL=false", "root", "");
     }
 
 
 
-    protected PreparedStatement prepareStatement(AbstractEntidade entidade, PreparedStatement pst, Field[] atributosArray)
+    protected PreparedStatement prepareStatement(AbstractEntidade entidade, PreparedStatement pst, List<Field> atributos)
     {
-        Class<?> classeEntidade = null;
-        Class<?> classePreparedStatement = null;
-        Class<?>[] tiposParametroPst = new Class<?>[2];
-        String nomeMetodoPst = null;
-
-        tiposParametroPst[0] = Integer.TYPE;
-        int i = 0;
-        try {
-            classeEntidade  = Class.forName(entidade.getClass().getName());
-            classePreparedStatement = Class.forName(PreparedStatement.class.getName());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        for(Field atributo: atributosArray)
-        {
-
-            try {
-                i++;
-
-                String nomeMetodoEntidade = StringGenerator.gerarNomeMetodoGetSet(atributo, "get");
-                if(atributo.getType().isPrimitive())
-                {
-                    nomeMetodoPst = "set" + atributo.getType().getSimpleName().substring(0, 1).toUpperCase() + atributo.getType().getSimpleName().substring(1);
-                }
-                else
-                {
-                    nomeMetodoPst = "set" + atributo.getType().getSimpleName();
-                }
-
-                tiposParametroPst[1] = atributo.getType();
-
-                Method metodoEntidade = classeEntidade.getMethod(nomeMetodoEntidade);
-                Method metodoPst = classePreparedStatement.getDeclaredMethod(nomeMetodoPst, tiposParametroPst);
-
-                metodoPst.invoke(pst, i, metodoEntidade.invoke(entidade));
-
-            } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                e.printStackTrace();
+        atributos.forEach(atributo -> {
+            String nomeMetodoPst = null;
+            if(atributo.getType().isPrimitive())
+            {
+                nomeMetodoPst = "set" + atributo.getType().getSimpleName().substring(0, 1).toUpperCase() + atributo.getType().getSimpleName().substring(1);
+            } else {
+                nomeMetodoPst = "set" + atributo.getType().getSimpleName();
             }
-        }
-
+            Object object = new Mirror().on(entidade).invoke().getterFor(atributo);
+            new Mirror().on(pst).invoke().method(nomeMetodoPst).withArgs(atributos.indexOf(atributo) + 1, object);
+        });
         return pst;
     }
 
-    public String buildQueryInsert(Field[] fields, String tableName) {
+    public String buildQueryInsert(List<Field> fields, String tableName) {
         StringBuilder sql1 = new StringBuilder();
         StringBuilder sql2 = new StringBuilder();
 

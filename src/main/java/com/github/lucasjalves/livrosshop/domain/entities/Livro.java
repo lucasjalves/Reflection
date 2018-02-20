@@ -1,17 +1,16 @@
 package com.github.lucasjalves.livrosshop.domain.entities;
 
 public class Livro extends AbstractEntidade {
-    private String autor;
+    private String titulo;
     private int ano;
 
-    public String getAutor() {
-        return autor;
+    public String getTitulo() {
+        return titulo;
     }
 
-    public void setAutor(String autor) {
-        this.autor = autor;
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
     }
-
 
     public int getAno() {
         return ano;

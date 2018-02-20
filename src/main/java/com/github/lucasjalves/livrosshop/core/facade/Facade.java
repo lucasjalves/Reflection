@@ -5,7 +5,7 @@ import com.github.lucasjalves.livrosshop.domain.entities.AbstractEntidade;
 
 public interface Facade<T> {
     Resultado consultar(T t);
-    Resultado atualizar(AbstractEntidade entidade);
-    Resultado deletar(AbstractEntidade entidade);
-    Resultado salvar(AbstractEntidade entidade);
+    Resultado atualizar(T t);
+    Resultado deletar(T t);
+    Resultado salvar(T t);
 }
