@@ -3,8 +3,6 @@ package com.github.lucasjalves.livrosshop.core.facade.impl;
 import com.github.lucasjalves.livrosshop.core.aplicacao.Resultado;
 import com.github.lucasjalves.livrosshop.core.facade.Facade;
 import com.github.lucasjalves.livrosshop.core.repository.AbstractRepository;
-import com.github.lucasjalves.livrosshop.core.util.ClassCreatorUtil;
-import com.github.lucasjalves.livrosshop.core.util.DatabaseUtil;
 import com.github.lucasjalves.livrosshop.domain.entities.AbstractEntidade;
 
 import org.reflections.Reflections;
@@ -12,7 +10,6 @@ import org.reflections.Reflections;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.sql.Connection;
 import java.util.*;
 
 public final class FacadeImpl implements Facade {
@@ -48,10 +45,6 @@ public final class FacadeImpl implements Facade {
         return INSTANCE;
     }
 
-    public static void main(String[] args) {
-        Connection connection = DatabaseUtil.addConnection("jdbc:mysql://localhost/livrosdb?useSSL=false", "root", "");
-        ClassCreatorUtil.createClasses(DatabaseUtil.scanTables(connection));
-    }
     @Override
     public Resultado consultar(Object o) {
         return null;

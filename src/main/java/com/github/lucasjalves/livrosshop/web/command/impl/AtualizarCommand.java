@@ -6,9 +6,9 @@ import com.github.lucasjalves.livrosshop.domain.entities.AbstractEntidade;
 
 public class AtualizarCommand extends AbstractCommand {
 
-	public Resultado executar(AbstractEntidade entidade)
+	public Resultado executar(Object object)
 	{
-		return facade.atualizar(entidade);
+		return facade.atualizar(object);
 	}
 	
 }

@@ -7,8 +7,8 @@ import com.github.lucasjalves.livrosshop.web.command.AbstractCommand;
 
 public class ConsultarCommand extends AbstractCommand {
 
-	public Resultado executar(AbstractEntidade entidade)
+	public Resultado executar(Object object)
     {
-		return facade.consultar(entidade);
+		return facade.consultar(object);
 	}
 }

@@ -2,6 +2,8 @@ package com.github.lucasjalves.livrosshop.web.viewhelper;
 
 import com.github.lucasjalves.livrosshop.domain.entities.AbstractEntidade;
 import net.vidageek.mirror.dsl.Mirror;
+
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 import java.util.List;

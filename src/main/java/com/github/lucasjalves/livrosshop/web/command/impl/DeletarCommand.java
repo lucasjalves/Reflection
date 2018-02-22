@@ -7,7 +7,7 @@ import com.github.lucasjalves.livrosshop.web.command.AbstractCommand;
 
 public class DeletarCommand extends AbstractCommand {
 
-	public Resultado executar(AbstractEntidade entidade)
+	public Resultado executar(Object entidade)
     {
 		return facade.deletar(entidade);
 	}

@@ -8,7 +8,6 @@ import com.github.lucasjalves.livrosshop.web.viewhelper.AbstractViewHelper;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -23,16 +22,14 @@ public class LivroViewHelper extends AbstractViewHelper {
 
 	@Override
 	public AbstractEntidade getEntidades(HttpServletRequest request) {
-
 		List<Field> atributos = asList(Livro.class.getDeclaredFields());
 		return getParameters(atributos, new Livro(), request);
-
 	}
 
 	@Override
 	public void setView(Resultado resultado, HttpServletRequest request, HttpServletResponse response) {
 		RequestDispatcher d= null;
-		d = request.getRequestDispatcher("index.jsp");
+		d = request.getRequestDispatcher("cadastrar-livro.jsp");
 		try {
 			d.forward(request,response);
 		} catch (ServletException | IOException e) {

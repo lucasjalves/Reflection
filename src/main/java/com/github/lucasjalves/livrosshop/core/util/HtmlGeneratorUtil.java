@@ -7,6 +7,8 @@ public final class HtmlGeneratorUtil {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<tr><td>");
 		sb.append(texto);
+		sb.append("</td>");
+		sb.append("<td>");
 		sb.append("<input type='text' name='");
 		sb.append(nomeParametro);
 		sb.append("'/>");

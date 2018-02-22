@@ -6,7 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DatabaseUtil {
+public final class DatabaseUtil {
+	private DatabaseUtil(){}
 	public static Connection addConnection(String url, String user, String pwd) {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -25,24 +26,26 @@ public class DatabaseUtil {
 
 	public static Map scanTables(Connection connection)
 	{
-		PreparedStatement pst = null;
 		List<String> nomesColunas = new ArrayList<>();
-		Map<String, List<String>> infoTables = new HashMap<>();
-		try
-		{
-			pst = connection.prepareStatement("show tables");
-			ResultSet resultSet = pst.executeQuery();
 
+		Map<String, List<String>> infoTables = new HashMap<>();
+		try(
+		        PreparedStatement pst = connection.prepareStatement("show tables");
+            ResultSet resultSet = pst.executeQuery();
+        )
+		{
 			DatabaseMetaData metaData = connection.getMetaData();
 			while(resultSet.next())
 			{
 				String nomeTabela = resultSet.getString(1);
 				ResultSet resultSetTables = metaData.getColumns(null,null, nomeTabela, null);
+                String msg = "Tabela encontrada: " + nomeTabela + " (";
 				while(resultSetTables.next())
 				{
-					System.out.println(resultSetTables.getString(4));
 					nomesColunas.add(resultSetTables.getString(4));
+					msg = msg + resultSetTables.getString(4) + ", ";
 				}
+                System.out.println(msg + ") ");
 				infoTables.put(nomeTabela, nomesColunas);
 			}
 		}catch (SQLException e)

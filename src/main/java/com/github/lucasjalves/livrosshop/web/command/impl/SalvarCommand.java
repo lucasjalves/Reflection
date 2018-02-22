@@ -7,9 +7,9 @@ import com.github.lucasjalves.livrosshop.web.command.AbstractCommand;
 
 public class SalvarCommand extends AbstractCommand {
 
-	public Resultado executar(AbstractEntidade entidade)
+	public Resultado executar(Object object)
     {
-		return facade.salvar(entidade);
+    	return facade.salvar(object);
 	}
 
 }
